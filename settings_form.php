@@ -49,6 +49,16 @@ class tool_inactive_user_reminder_config_form extends moodleform {
         $mform->setType('config_daysbetweenemails', PARAM_INT);
         $mform->setDefault('config_daysbetweenemails', 7);
 
+        // add a select dropdown for a list of courses
+        $courses = get_courses();
+        $course_options = array();
+        foreach ($courses as $course) {
+            $course_options[$course->id] = $course->fullname;
+        }
+        $mform->addElement('select', 'config_course', get_string('course', 'tool_inactive_user_reminder'), $course_options);
+        $mform->setType('config_course', PARAM_INT);
+        $mform->setDefault('config_course', 1);
+
         $mform->addElement('header', 'config_headeremail', get_string('emailsetting', 'tool_inactive_user_reminder'));
         $mform->addElement('text', 'config_subjectemail', get_string('emailsubject', 'tool_inactive_user_reminder'));
         $editoroptions = array('trusttext' => true, 'subdirs' => true, 'maxfiles' => 1,

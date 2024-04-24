@@ -56,11 +56,27 @@ class tool_inactive_user_reminder_task extends \core\task\scheduled_task {
         $body = get_config('tool_inactive_user_reminder', 'emailbody');
         $numberofemails = get_config('tool_inactive_user_reminder', 'numberofemails');
         $daysbetweenemails = get_config('tool_inactive_user_reminder', 'daysbetweenemails');
+        $courseid = get_config('tool_inactive_user_reminder', 'course');
 
         $lastaccesstime = time() - ($inactivity * 24 * 60 * 60);
         $users =
             $DB->get_records_sql("SELECT * FROM {user} u WHERE lastaccess < :lastaccess AND deleted = 0 AND lastaccess <> 0 AND lastaccess IS NOT NULL",
                 array('lastaccess' => $lastaccesstime));
+
+        if ($courseid) {
+            $context = \context_course::instance($courseid);
+            $users = get_enrolled_users($context);
+            // if the user is not enrolled in the course, or has completed the course, then remove them from the list
+            foreach ($users as $key => $user) {
+                $course = $DB->get_record('course', array('id' => $courseid));
+                $coursemodule = $DB->get_record('course_modules', array('course' => $courseid));
+                $completion = new \completion_info($course);
+                $completionstate = $completion->get_data($user->id, true);
+                if (!$completionstate || $completionstate->completionstate != \completion_info::COMPLETE) {
+                    unset($users[$key]);
+                }
+            }
+        }
 
         $messagetext = html_to_text($body);
         $mainadminuser = get_admin();

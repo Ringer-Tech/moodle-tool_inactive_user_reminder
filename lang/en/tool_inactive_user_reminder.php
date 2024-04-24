@@ -42,3 +42,4 @@ $string['userinactivtime'] = 'User is inactive for past day ';
 $string['userid'] = 'USER ID ';
 $string['numberofemails'] = 'Number of emails to send';
 $string['daysbetweenemails'] = 'Period of time between follow up emails (days)';
+$string['course'] = 'A course which if the user has completed no reminder will be sent';

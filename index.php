@@ -47,6 +47,7 @@ if ($settingsform->is_submitted()) {
     set_config('emailsubject', $fromdata->config_subjectemail, 'tool_inactive_user_reminder');
     set_config('numberofemails', $fromdata->config_numberofemails, 'tool_inactive_user_reminder');
     set_config('daysbetweenemails', $fromdata->config_daysbetweenemails, 'tool_inactive_user_reminder');
+    set_config('course', $fromdata->config_course, 'tool_inactive_user_reminder');
     set_config('emailbody', $fromdata->config_bodyemail['text'], 'tool_inactive_user_reminder');
 }
 
